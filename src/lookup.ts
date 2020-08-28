@@ -63,6 +63,7 @@ export class Lookup {
       .filter(x => !straightFlushes.some(s => (x ^ s) === 0))
       .reverse()
 
+    // flushes
     let rank = 1
     straightFlushes.forEach(x => {
       this.flushLookup[Card.primeProductFromRankBits(x)] = rank
@@ -71,6 +72,18 @@ export class Lookup {
     rank = Lookup.MAX_FULL_HOUSE + 1
     otherFlushes.forEach(x => {
       this.flushLookup[Card.primeProductFromRankBits(x)] = rank
+      rank += 1
+    })
+
+    // unsuited, reuse same bit sequences for straight and high cards
+    rank = Lookup.MAX_FLUSH + 1
+    straightFlushes.forEach(x => {
+      this.unSuitedLookup[Card.primeProductFromRankBits(x)] = rank
+      rank += 1
+    })
+    rank = Lookup.MAX_PAIR + 1
+    otherFlushes.forEach(x => {
+      this.unSuitedLookup[Card.primeProductFromRankBits(x)] = rank
       rank += 1
     })
   }
