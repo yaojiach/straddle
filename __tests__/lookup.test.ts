@@ -1,4 +1,4 @@
-import { Lookup } from '../src/lookup'
+import { Lookup, getHandFromScore } from '../src/lookup'
 
 describe('test lookup class', () => {
   const lookup = new Lookup()
@@ -11,5 +11,9 @@ describe('test lookup class', () => {
   it('generates correct multiples', () => {
     expect(lookup.unSuitedLookup[48]).toEqual(166)
     expect(Object.keys(lookup.unSuitedLookup).length).toEqual(6175)
+  })
+
+  it('gets correct hand from score', () => {
+    expect(getHandFromScore(1600)).toEqual('Straight')
   })
 })

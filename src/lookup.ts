@@ -2,41 +2,37 @@ import { Card } from './card'
 import { getNextBitSequence } from './bits'
 import { combinations } from './helpers'
 
+const MAX_ROYAL_FLUSH = 1
+const MAX_STRAIGHT_FLUSH = 10
+const MAX_FOUR_OF_A_KIND = 166
+const MAX_FULL_HOUSE = 322
+const MAX_FLUSH = 1599
+const MAX_STRAIGHT = 1609
+const MAX_THREE_OF_A_KIND = 2467
+const MAX_TWO_PAIR = 3325
+const MAX_PAIR = 6185
+const MAX_HIGH_CARD = 7462
+
+const MAX_TO_RANK_CLASS: { [k: number]: string } = {
+  [MAX_ROYAL_FLUSH]: 'Royal 👑 Flush',
+  [MAX_STRAIGHT_FLUSH]: 'Straight Flush',
+  [MAX_FOUR_OF_A_KIND]: 'Four of a Kind',
+  [MAX_FULL_HOUSE]: 'Full House',
+  [MAX_FLUSH]: 'Flush',
+  [MAX_STRAIGHT]: 'Straight',
+  [MAX_THREE_OF_A_KIND]: 'Three of a Kind',
+  [MAX_TWO_PAIR]: 'Two Pair',
+  [MAX_PAIR]: 'Pair',
+  [MAX_HIGH_CARD]: 'High Card'
+}
+
+export function getHandFromScore(score: number) {
+  const cutOffs = Object.keys(MAX_TO_RANK_CLASS).map(s => parseInt(s))
+  const diffs = cutOffs.map(c => score - c)
+  return MAX_TO_RANK_CLASS[cutOffs[diffs.indexOf(Math.max(...diffs.filter(d => d <= 0)))]]
+}
+
 export class Lookup {
-  static MAX_STRAIGHT_FLUSH = 10
-  static MAX_FOUR_OF_A_KIND = 166
-  static MAX_FULL_HOUSE = 322
-  static MAX_FLUSH = 1599
-  static MAX_STRAIGHT = 1609
-  static MAX_THREE_OF_A_KIND = 2467
-  static MAX_TWO_PAIR = 3325
-  static MAX_PAIR = 6185
-  static MAX_HIGH_CARD = 7462
-
-  static MAX_TO_RANK_CLASS = {
-    MAX_STRAIGHT_FLUSH: 1,
-    MAX_FOUR_OF_A_KIND: 2,
-    MAX_FULL_HOUSE: 3,
-    MAX_FLUSH: 4,
-    MAX_STRAIGHT: 5,
-    MAX_THREE_OF_A_KIND: 6,
-    MAX_TWO_PAIR: 7,
-    MAX_PAIR: 8,
-    MAX_HIGH_CARD: 9
-  }
-
-  static RANK_CLASS_TO_STRING = {
-    1: 'Straight Flush',
-    2: 'Four of a Kind',
-    3: 'Full House',
-    4: 'Flush',
-    5: 'Straight',
-    6: 'Three of a Kind',
-    7: 'Two Pair',
-    8: 'Pair',
-    9: 'High Card'
-  }
-
   flushLookup: { [k: string]: number } = {}
   unSuitedLookup: { [k: string]: number } = {}
 
@@ -46,7 +42,7 @@ export class Lookup {
   }
 
   private populateFlushesStraightsHighs() {
-    const straightFlushes = [
+    const straight = [
       7936, // 0b1111100000000, royal flush
       3968, // 0b111110000000
       1984, // 0b11111000000
@@ -61,31 +57,31 @@ export class Lookup {
 
     const numFlushes = 1287 // 13 choose 5
     const nextBitGenerator = getNextBitSequence(Number('0b11111'))
-    const otherFlushes = [...Array(numFlushes - 1)]
+    const other = [...Array(numFlushes - 1)]
       .map(() => nextBitGenerator.next().value)
-      .filter(x => !straightFlushes.some(s => (x ^ s) === 0))
+      .filter(x => !straight.some(s => (x ^ s) === 0))
       .reverse()
 
     // flushes
     let rank = 1
-    straightFlushes.forEach(x => {
+    straight.forEach(x => {
       this.flushLookup[Card.primeProductFromRankBits(x)] = rank
       rank += 1
     })
-    rank = Lookup.MAX_FULL_HOUSE + 1
-    otherFlushes.forEach(x => {
+    rank = MAX_FULL_HOUSE + 1
+    other.forEach(x => {
       this.flushLookup[Card.primeProductFromRankBits(x)] = rank
       rank += 1
     })
 
     // unsuited, reuse same bit sequences for straight and high cards
-    rank = Lookup.MAX_FLUSH + 1
-    straightFlushes.forEach(x => {
+    rank = MAX_FLUSH + 1
+    straight.forEach(x => {
       this.unSuitedLookup[Card.primeProductFromRankBits(x)] = rank
       rank += 1
     })
-    rank = Lookup.MAX_PAIR + 1
-    otherFlushes.forEach(x => {
+    rank = MAX_PAIR + 1
+    other.forEach(x => {
       this.unSuitedLookup[Card.primeProductFromRankBits(x)] = rank
       rank += 1
     })
@@ -95,7 +91,7 @@ export class Lookup {
     const reverseRank = Card.INT_RANKS.reverse()
 
     // Four of a kind
-    let rank = Lookup.MAX_STRAIGHT_FLUSH + 1
+    let rank = MAX_STRAIGHT_FLUSH + 1
     reverseRank.forEach(r => {
       reverseRank
         .filter(k => k !== r)
@@ -106,7 +102,7 @@ export class Lookup {
     })
 
     // Full house
-    rank = Lookup.MAX_FOUR_OF_A_KIND + 1
+    rank = MAX_FOUR_OF_A_KIND + 1
     reverseRank.forEach(r => {
       reverseRank
         .filter(k => k !== r)
@@ -117,7 +113,7 @@ export class Lookup {
     })
 
     // Three of a kind
-    rank = Lookup.MAX_STRAIGHT + 1
+    rank = MAX_STRAIGHT + 1
     reverseRank.forEach(r => {
       combinations(
         reverseRank.filter(k => k !== r),
@@ -129,7 +125,7 @@ export class Lookup {
     })
 
     // Two pair
-    rank = Lookup.MAX_THREE_OF_A_KIND + 1
+    rank = MAX_THREE_OF_A_KIND + 1
     combinations(reverseRank, 2).forEach(([x, y]) => {
       reverseRank
         .filter(k => ![x, y].includes(k))
@@ -140,7 +136,7 @@ export class Lookup {
     })
 
     // Pair
-    rank = Lookup.MAX_TWO_PAIR + 1
+    rank = MAX_TWO_PAIR + 1
     reverseRank.forEach(r => {
       combinations(
         reverseRank.filter(k => k !== r),
