@@ -1,15 +1,19 @@
 import { Card } from './card'
 
 export class Deck {
-  static FULL_DECK: number[]
   cards: number[]
 
   constructor() {
-    this.cards = this.shuffle(this.getFullDeck())
+    this.cards = this.getFullDeck()
+    this.shuffle()
   }
 
-  shuffle(cards: number[]) {
-    return cards.sort(() => Math.random() - 0.5)
+  shuffle() {
+    this.cards.sort(() => Math.random() - 0.5)
+  }
+
+  draw(n = 1) {
+    return this.cards.splice(0, n)
   }
 
   toString() {
@@ -17,13 +21,10 @@ export class Deck {
   }
 
   private getFullDeck() {
-    if (!Deck.FULL_DECK) {
-      Deck.FULL_DECK = [
-        ...Card.STR_RANKS.map(r => Object.keys(Card.STR_SUIT_TO_INT_SUIT).map(s => r.concat(s)))
-      ]
-        .flat()
-        .map(c => Card.new(c))
-    }
-    return Deck.FULL_DECK
+    return [
+      ...Card.STR_RANKS.map(r => Object.keys(Card.STR_SUIT_TO_INT_SUIT).map(s => r.concat(s)))
+    ]
+      .flat()
+      .map(c => Card.new(c))
   }
 }
