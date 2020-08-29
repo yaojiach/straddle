@@ -1,14 +1,15 @@
 import { Lookup } from '../src/lookup'
 
 describe('test lookup class', () => {
-  it('generates correct next bit sequence', () => {
-    const gen = new Lookup().getNextBitSequence(Number('0b11111'))
-    const firstTwo = [gen.next().value, gen.next().value]
-    expect(firstTwo).toEqual([47, 55])
-  })
+  const lookup = new Lookup()
 
   it('generates correct flushes straights and high cards', () => {
-    const lookup = new Lookup()
+    expect(lookup.flushLookup[1966237]).toEqual(573)
     expect(Object.keys(lookup.flushLookup).length).toEqual(1287)
+  })
+
+  it('generates correct multiples', () => {
+    expect(lookup.unSuitedLookup[48]).toEqual(166)
+    expect(Object.keys(lookup.unSuitedLookup).length).toEqual(6175)
   })
 })

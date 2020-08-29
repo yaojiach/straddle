@@ -1,4 +1,6 @@
-import { Card } from '.'
+import { Card } from './card'
+import { getNextBitSequence } from './bits'
+import { combinations } from './helpers'
 
 export class Lookup {
   static MAX_STRAIGHT_FLUSH = 10
@@ -40,9 +42,10 @@ export class Lookup {
 
   constructor() {
     this.populateFlushesStraightsHighs()
+    this.populateMultiples()
   }
 
-  populateFlushesStraightsHighs() {
+  private populateFlushesStraightsHighs() {
     const straightFlushes = [
       7936, // 0b1111100000000, royal flush
       3968, // 0b111110000000
@@ -57,7 +60,7 @@ export class Lookup {
     ]
 
     const numFlushes = 1287 // 13 choose 5
-    const nextBitGenerator = this.getNextBitSequence(Number('0b11111'))
+    const nextBitGenerator = getNextBitSequence(Number('0b11111'))
     const otherFlushes = [...Array(numFlushes - 1)]
       .map(() => nextBitGenerator.next().value)
       .filter(x => !straightFlushes.some(s => (x ^ s) === 0))
@@ -88,14 +91,66 @@ export class Lookup {
     })
   }
 
-  *getNextBitSequence(bits: number): Generator<number, any, number> {
-    let t = (bits | (bits - 1)) + 1
-    let next = t | ((((t & -t) / (bits & -bits)) >> 1) - 1)
-    yield next
-    while (true) {
-      t = (next | (next - 1)) + 1
-      next = t | ((((t & -t) / (next & -next)) >> 1) - 1)
-      yield next
-    }
+  private populateMultiples() {
+    const reverseRank = Card.INT_RANKS.reverse()
+
+    // Four of a kind
+    let rank = Lookup.MAX_STRAIGHT_FLUSH + 1
+    reverseRank.forEach(r => {
+      reverseRank
+        .filter(k => k !== r)
+        .forEach(k => {
+          this.unSuitedLookup[Card.PRIMES[r] ** 4 * Card.PRIMES[k]] = rank
+          rank += 1
+        })
+    })
+
+    // Full house
+    rank = Lookup.MAX_FOUR_OF_A_KIND + 1
+    reverseRank.forEach(r => {
+      reverseRank
+        .filter(k => k !== r)
+        .forEach(k => {
+          this.unSuitedLookup[Card.PRIMES[r] ** 3 * Card.PRIMES[k] ** 2] = rank
+          rank += 1
+        })
+    })
+
+    // Three of a kind
+    rank = Lookup.MAX_STRAIGHT + 1
+    reverseRank.forEach(r => {
+      combinations(
+        reverseRank.filter(k => k !== r),
+        2
+      ).forEach(([x, y]) => {
+        this.unSuitedLookup[Card.PRIMES[r] ** 3 * Card.PRIMES[x] * Card.PRIMES[y]] = rank
+        rank += 1
+      })
+    })
+
+    // Two pair
+    rank = Lookup.MAX_THREE_OF_A_KIND + 1
+    combinations(reverseRank, 2).forEach(([x, y]) => {
+      reverseRank
+        .filter(k => ![x, y].includes(k))
+        .forEach(k => {
+          this.unSuitedLookup[Card.PRIMES[x] ** 2 * Card.PRIMES[y] ** 2 * Card.PRIMES[k]] = rank
+          rank += 1
+        })
+    })
+
+    // Pair
+    rank = Lookup.MAX_TWO_PAIR + 1
+    reverseRank.forEach(r => {
+      combinations(
+        reverseRank.filter(k => k !== r),
+        3
+      ).forEach(([x, y, z]) => {
+        this.unSuitedLookup[
+          Card.PRIMES[r] ** 2 * Card.PRIMES[x] * Card.PRIMES[y] * Card.PRIMES[z]
+        ] = rank
+        rank += 1
+      })
+    })
   }
 }
