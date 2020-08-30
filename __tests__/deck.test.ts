@@ -3,6 +3,7 @@ import { Card } from '../src/card'
 
 describe('test deck class', () => {
   it('creates right deck size', () => {
+    console.log(new Deck().cards.map(c => Card.intToPrettyStr(c)))
     expect(new Deck().cards.length).toEqual(52)
   })
 
