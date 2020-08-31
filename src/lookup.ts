@@ -57,7 +57,8 @@ export class Lookup {
 
     const numFlushes = 1287 // 13 choose 5
     const nextBitGenerator = getNextBitSequence(Number('0b11111'))
-    const other = [...Array(numFlushes - 1)]
+    const other = Array(numFlushes - 1)
+      .fill(0)
       .map(() => nextBitGenerator.next().value)
       .filter(x => !straight.some(s => (x ^ s) === 0))
       .reverse()
