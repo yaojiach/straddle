@@ -1,5 +1,4 @@
-import { Deck } from '../src/deck'
-import { Card } from '../src/card'
+import { Deck, Card } from '../src/index'
 
 describe('test deck class', () => {
   it('creates right deck size', () => {

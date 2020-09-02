@@ -1,4 +1,4 @@
-import { Card } from '../src/card'
+import { Card } from '../src/index'
 
 describe('test card class', () => {
   it('creates right card', () => {

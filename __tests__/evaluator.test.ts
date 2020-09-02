@@ -1,5 +1,4 @@
-import { Evaluator } from '../src/evaluator'
-import { Card } from '../src/card'
+import { Evaluator, Card } from '../src/index'
 
 const evaluator = new Evaluator()
 
