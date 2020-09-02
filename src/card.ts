@@ -71,11 +71,7 @@ export class Card {
     }]`
   }
 
-  static printPrettyCard(cardInt: number) {
-    console.log(Card.intToPrettyStr(cardInt))
-  }
-
-  static printPrettyCards(cardInts: number[]) {
-    console.log(cardInts.map(c => Card.intToPrettyStr(c)).join(' '))
+  static intToPrettyHand(cardInts: number[]) {
+    return cardInts.map(c => Card.intToPrettyStr(c)).join(' ')
   }
 }

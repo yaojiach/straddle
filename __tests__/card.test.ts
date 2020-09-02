@@ -20,4 +20,8 @@ describe('test card class', () => {
   it('returns the right pretty print from int', () => {
     expect(Card.intToPrettyStr(67119647)).toEqual('[Q♥️]')
   })
+
+  it('returns the right pretty print from hand', () => {
+    expect(Card.intToPrettyHand([67119647, 67119647])).toEqual('[Q♥️] [Q♥️]')
+  })
 })
