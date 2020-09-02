@@ -49,7 +49,7 @@ export class Card {
     return (cardInt >> 12) & 0xf
   }
 
-  static getBitRandInt(cardInt: number) {
+  static getBitRankInt(cardInt: number) {
     return (cardInt >> 16) & 0x1fff
   }
 
