@@ -1,6 +1,10 @@
 import { combinations } from '../src/helpers'
 
 describe('test helpers module', () => {
+  it('generates empty given invalid length', () => {
+    expect(combinations([1, 2, 3], 4)).toEqual([])
+  })
+
   it('generates correct pairs', () => {
     expect(combinations([1, 2, 3], 2)).toEqual([
       [1, 2],

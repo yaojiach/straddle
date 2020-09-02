@@ -3,12 +3,20 @@ import { Evaluator, Card } from '../src/index'
 const evaluator = new Evaluator()
 
 describe('test evaluator class', () => {
-  it('evaluates correctly for 5 cards', () => {
+  it('evaluates correctly for unsuited 5 cards', () => {
     const res = evaluator.evaluate(
       [Card.new('Qs'), Card.new('Th')],
       [Card.new('Ah'), Card.new('Kd'), Card.new('Jc')]
     )
     expect(res.score).toEqual(1600)
+  })
+
+  it('evaluates correctly for flush 5 cards', () => {
+    const res = evaluator.evaluate(
+      [Card.new('Qh'), Card.new('Th')],
+      [Card.new('Ah'), Card.new('Kh'), Card.new('Jh')]
+    )
+    expect(res.score).toEqual(1)
   })
 
   it('evaluates correctly for 7 cards', () => {
