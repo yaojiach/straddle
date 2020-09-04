@@ -11,7 +11,7 @@ yarn add straddle
 ```javascript
 const deck = new Deck() // create and shuffle the deck
 const hand = deck.draw(2) // draw 2 cards from deck
-Card.printPrettyCards(hand) // print the hand: [8♣️] [3♦️]
+console.log(Card.intToPrettyHand(hand)) // print the hand: [8♣️] [3♦️]
 const board = deck.draw(5)
 const evaluator = new Evaluator()
 let score = evaluator.evaluate(hand, board) // evaluate best hand
