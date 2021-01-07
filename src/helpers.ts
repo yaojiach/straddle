@@ -10,20 +10,16 @@ export function combinations(a: any[], k: number) {
   }
 
   if (k == 1) {
-    combs = []
-    for (let i = 0; i < a.length; i++) {
-      combs.push([a[i]])
-    }
-    return combs
+    return a.map(i => [i])
   }
 
   combs = []
   for (let i = 0; i < a.length - k + 1; i++) {
     let head = a.slice(i, i + 1)
     let tail = combinations(a.slice(i + 1), k - 1)
-    for (let j = 0; j < tail.length; j++) {
-      combs.push(head.concat(tail[j]))
-    }
+    tail.forEach(j => {
+      combs.push(head.concat(j))
+    })
   }
   return combs
 }

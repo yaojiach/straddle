@@ -5,6 +5,10 @@ describe('test helpers module', () => {
     expect(combinations([1, 2, 3], 4)).toEqual([])
   })
 
+  it('generates correct singletons', () => {
+    expect(combinations([1, 2, 3], 1)).toEqual([[1], [2], [3]])
+  })
+
   it('generates correct pairs', () => {
     expect(combinations([1, 2, 3], 2)).toEqual([
       [1, 2],
