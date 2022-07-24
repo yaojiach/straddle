@@ -7,7 +7,7 @@ const LOOKUP = new Lookup()
 export class Evaluator {
   evaluate(cards: number[], board: number[]) {
     return combinations(cards.concat(board), 5)
-      .map(c => this.five(c))
+      .map((c) => this.five(c))
       .reduce((x, y) => (x.score < y.score ? x : y))
   }
 
@@ -22,8 +22,8 @@ export class Evaluator {
     return {
       score,
       hand: cards,
-      handStr: cards.map(c => Card.intToStr(c)),
-      handPrettyStr: cards.map(c => Card.intToPrettyStr(c)),
+      handStr: cards.map((c) => Card.intToStr(c)),
+      handPrettyStr: cards.map((c) => Card.intToPrettyStr(c)),
       handName: getHandFromScore(score)
     }
   }

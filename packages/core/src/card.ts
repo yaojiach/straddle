@@ -32,7 +32,7 @@ export class Card {
   }
 
   static handToBinary(cardStrs: string[]) {
-    return cardStrs.map(c => Card.new(c))
+    return cardStrs.map((c) => Card.new(c))
   }
 
   static intToStr(cardInt: number) {
@@ -62,7 +62,7 @@ export class Card {
   }
 
   static primeProductFromRankBits(rankBits: number) {
-    return Card.INT_RANKS.filter(i => rankBits & (1 << i)).reduce((x, y) => x * Card.PRIMES[y], 1)
+    return Card.INT_RANKS.filter((i) => rankBits & (1 << i)).reduce((x, y) => x * Card.PRIMES[y], 1)
   }
 
   static intToPrettyStr(cardInt: number) {
@@ -72,6 +72,6 @@ export class Card {
   }
 
   static intToPrettyHand(cardInts: number[]) {
-    return cardInts.map(c => Card.intToPrettyStr(c)).join(' ')
+    return cardInts.map((c) => Card.intToPrettyStr(c)).join(' ')
   }
 }

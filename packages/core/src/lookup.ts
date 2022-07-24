@@ -27,9 +27,9 @@ const MAX_TO_RANK_CLASS: { [k: number]: string } = {
 }
 
 export function getHandFromScore(score: number) {
-  const cutOffs = Object.keys(MAX_TO_RANK_CLASS).map(s => parseInt(s))
-  const diffs = cutOffs.map(c => score - c)
-  return MAX_TO_RANK_CLASS[cutOffs[diffs.indexOf(Math.max(...diffs.filter(d => d <= 0)))]]
+  const cutOffs = Object.keys(MAX_TO_RANK_CLASS).map((s) => parseInt(s))
+  const diffs = cutOffs.map((c) => score - c)
+  return MAX_TO_RANK_CLASS[cutOffs[diffs.indexOf(Math.max(...diffs.filter((d) => d <= 0)))]]
 }
 
 export class Lookup {
@@ -59,29 +59,29 @@ export class Lookup {
     const nextBitGenerator = getNextBitSequence(Number('0b11111'))
     const other = [...Array(numFlushes - 1)]
       .map(() => nextBitGenerator.next().value)
-      .filter(x => !straight.some(s => (x ^ s) === 0))
+      .filter((x) => !straight.some((s) => (x ^ s) === 0))
       .reverse()
 
     // flushes
     let rank = 1
-    straight.forEach(x => {
+    straight.forEach((x) => {
       this.flushLookup[Card.primeProductFromRankBits(x)] = rank
       rank += 1
     })
     rank = MAX_FULL_HOUSE + 1
-    other.forEach(x => {
+    other.forEach((x) => {
       this.flushLookup[Card.primeProductFromRankBits(x)] = rank
       rank += 1
     })
 
     // unsuited, reuse same bit sequences for straight and high cards
     rank = MAX_FLUSH + 1
-    straight.forEach(x => {
+    straight.forEach((x) => {
       this.unSuitedLookup[Card.primeProductFromRankBits(x)] = rank
       rank += 1
     })
     rank = MAX_PAIR + 1
-    other.forEach(x => {
+    other.forEach((x) => {
       this.unSuitedLookup[Card.primeProductFromRankBits(x)] = rank
       rank += 1
     })
@@ -92,10 +92,10 @@ export class Lookup {
 
     // Four of a kind
     let rank = MAX_STRAIGHT_FLUSH + 1
-    reverseRank.forEach(r => {
+    reverseRank.forEach((r) => {
       reverseRank
-        .filter(k => k !== r)
-        .forEach(k => {
+        .filter((k) => k !== r)
+        .forEach((k) => {
           this.unSuitedLookup[Card.PRIMES[r] ** 4 * Card.PRIMES[k]] = rank
           rank += 1
         })
@@ -103,10 +103,10 @@ export class Lookup {
 
     // Full house
     rank = MAX_FOUR_OF_A_KIND + 1
-    reverseRank.forEach(r => {
+    reverseRank.forEach((r) => {
       reverseRank
-        .filter(k => k !== r)
-        .forEach(k => {
+        .filter((k) => k !== r)
+        .forEach((k) => {
           this.unSuitedLookup[Card.PRIMES[r] ** 3 * Card.PRIMES[k] ** 2] = rank
           rank += 1
         })
@@ -114,9 +114,9 @@ export class Lookup {
 
     // Three of a kind
     rank = MAX_STRAIGHT + 1
-    reverseRank.forEach(r => {
+    reverseRank.forEach((r) => {
       combinations(
-        reverseRank.filter(k => k !== r),
+        reverseRank.filter((k) => k !== r),
         2
       ).forEach(([x, y]) => {
         this.unSuitedLookup[Card.PRIMES[r] ** 3 * Card.PRIMES[x] * Card.PRIMES[y]] = rank
@@ -128,8 +128,8 @@ export class Lookup {
     rank = MAX_THREE_OF_A_KIND + 1
     combinations(reverseRank, 2).forEach(([x, y]) => {
       reverseRank
-        .filter(k => ![x, y].includes(k))
-        .forEach(k => {
+        .filter((k) => ![x, y].includes(k))
+        .forEach((k) => {
           this.unSuitedLookup[Card.PRIMES[x] ** 2 * Card.PRIMES[y] ** 2 * Card.PRIMES[k]] = rank
           rank += 1
         })
@@ -137,9 +137,9 @@ export class Lookup {
 
     // Pair
     rank = MAX_TWO_PAIR + 1
-    reverseRank.forEach(r => {
+    reverseRank.forEach((r) => {
       combinations(
-        reverseRank.filter(k => k !== r),
+        reverseRank.filter((k) => k !== r),
         3
       ).forEach(([x, y, z]) => {
         this.unSuitedLookup[

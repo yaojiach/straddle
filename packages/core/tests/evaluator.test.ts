@@ -24,7 +24,7 @@ describe('test evaluator class', () => {
       [Card.new('Qs'), Card.new('Jc')],
       [Card.new('Ah'), Card.new('Th'), Card.new('5c'), Card.new('Kd'), Card.new('6d')]
     )
-    expect(res.hand.map(c => Card.intToStr(c))).toEqual(['Qs', 'Jc', 'Ah', 'Th', 'Kd'])
+    expect(res.hand.map((c) => Card.intToStr(c))).toEqual(['Qs', 'Jc', 'Ah', 'Th', 'Kd'])
     expect(res.score).toEqual(1600)
   })
 })

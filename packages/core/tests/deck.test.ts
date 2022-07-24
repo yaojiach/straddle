@@ -6,7 +6,7 @@ describe('test deck class', () => {
   })
 
   it('creates right deck elements', () => {
-    const shuffledCards = new Deck().cards.map(c => Card.intToStr(c)).sort()
+    const shuffledCards = new Deck().cards.map((c) => Card.intToStr(c)).sort()
     expect([shuffledCards[0], shuffledCards[51]]).toEqual(['2c', 'Ts'])
   })
 })
@@ -21,6 +21,6 @@ describe('test deck draw', () => {
   })
 
   it('draws the right deck', () => {
-    expect(new Deck().draw(2).map(c => Card.intToStr(c))).toEqual(['Ac', 'Ad'])
+    expect(new Deck().draw(2).map((c) => Card.intToStr(c))).toEqual(['Ac', 'Ad'])
   })
 })

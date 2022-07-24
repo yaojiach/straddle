@@ -17,12 +17,12 @@ export class Deck {
   }
 
   toString() {
-    return this.cards.map(c => Card.intToPrettyStr(c))
+    return this.cards.map((c) => Card.intToPrettyStr(c))
   }
 
   private getFullDeck() {
-    return Card.STR_RANKS.map(r => Object.keys(Card.STR_SUIT_TO_INT_SUIT).map(s => r.concat(s)))
+    return Card.STR_RANKS.map((r) => Object.keys(Card.STR_SUIT_TO_INT_SUIT).map((s) => r.concat(s)))
       .flat()
-      .map(c => Card.new(c))
+      .map((c) => Card.new(c))
   }
 }
